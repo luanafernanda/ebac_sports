@@ -6,6 +6,7 @@ import * as S from './styles'
 type Props = {
   produtos: ProdutoType[]
   favoritos: ProdutoType[]
+  carrinho: ProdutoType[]
   adicionarAoCarrinho: (produto: ProdutoType) => void
   favoritar: (produto: ProdutoType) => void
 }
@@ -13,6 +14,7 @@ type Props = {
 const ProdutosComponent = ({
   produtos,
   favoritos,
+  carrinho,
   adicionarAoCarrinho,
   favoritar
 }: Props) => {
@@ -31,6 +33,7 @@ const ProdutosComponent = ({
             estaNosFavoritos={produtoEstaNosFavoritos(produto)}
             key={produto.id}
             produto={produto}
+            carrinho={carrinho}
             favoritar={favoritar}
             aoComprar={adicionarAoCarrinho}
           />

@@ -6,6 +6,7 @@ type Props = {
   aoComprar: (produto: ProdutoType) => void
   favoritar: (produto: ProdutoType) => void
   estaNosFavoritos: boolean
+  carrinho: ProdutoType[]
 }
 
 export const paraReal = (valor: number) =>
@@ -17,8 +18,17 @@ const ProdutoComponent = ({
   produto,
   aoComprar,
   favoritar,
-  estaNosFavoritos
+  estaNosFavoritos,
+  carrinho
 }: Props) => {
+  function manipularAdicaoAoCarrinho(produto: ProdutoType) {
+    if (carrinho.find((p) => p.id === produto.id)) {
+      alert('Item já adicionado')
+    } else {
+      aoComprar(produto)
+    }
+  }
+
   return (
     <S.Produto>
       <S.Capa>
@@ -33,8 +43,11 @@ const ProdutoComponent = ({
           ? '- Remover dos favoritos'
           : '+ Adicionar aos favoritos'}
       </S.BtnComprar>
-      <S.BtnComprar onClick={() => aoComprar(produto)} type="button">
-        Adicionar ao carrinho
+      <S.BtnComprar
+        onClick={() => manipularAdicaoAoCarrinho(produto)}
+        type="button"
+      >
+        Adicionar Ao Carrinho
       </S.BtnComprar>
     </S.Produto>
   )

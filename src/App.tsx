@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { adicionarAoCarrinho } from './redux/slices/carrinhoSlices'
+import { favoritar } from './redux/slices/favoritosSlices'
+import { setProdutos } from './redux/slices/produtosSlice'
 import Header from './components/Header'
 import Produtos from './containers/Produtos'
-
 import { GlobalStyle } from './styles'
 
 export type Produto = {
@@ -12,31 +15,24 @@ export type Produto = {
 }
 
 function App() {
-  const [produtos, setProdutos] = useState<Produto[]>([])
-  const [carrinho, setCarrinho] = useState<Produto[]>([])
-  const [favoritos, setFavoritos] = useState<Produto[]>([])
+  const dispatch = useDispatch()
+
+  const produtos = useSelector((state: any) => state.produtos)
+  const carrinho = useSelector((state: any) => state.carrinho)
+  const favoritos = useSelector((state: any) => state.favoritos)
 
   useEffect(() => {
     fetch('https://fake-api-tau.vercel.app/api/ebac_sports')
       .then((res) => res.json())
-      .then((res) => setProdutos(res))
-  }, [])
+      .then((res) => dispatch(setProdutos(res)))
+  }, [dispatch])
 
-  function adicionarAoCarrinho(produto: Produto) {
-    if (carrinho.find((p) => p.id === produto.id)) {
-      alert('Item já adicionado')
-    } else {
-      setCarrinho([...carrinho, produto])
-    }
+  function handleAdicionarAoCarrinho(produto: Produto) {
+    dispatch(adicionarAoCarrinho(produto))
   }
 
-  function favoritar(produto: Produto) {
-    if (favoritos.find((p) => p.id === produto.id)) {
-      const favoritosSemProduto = favoritos.filter((p) => p.id !== produto.id)
-      setFavoritos(favoritosSemProduto)
-    } else {
-      setFavoritos([...favoritos, produto])
-    }
+  function handleFavoritar(produto: Produto) {
+    dispatch(favoritar(produto))
   }
 
   return (
@@ -47,8 +43,9 @@ function App() {
         <Produtos
           produtos={produtos}
           favoritos={favoritos}
-          favoritar={favoritar}
-          adicionarAoCarrinho={adicionarAoCarrinho}
+          carrinho={carrinho}
+          favoritar={handleFavoritar}
+          adicionarAoCarrinho={handleAdicionarAoCarrinho}
         />
       </div>
     </>
